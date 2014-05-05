@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+    Document   : welcome
+    Created on : 25-feb-2014, 9:36:30
+    Author     : DanielFlores
+-->
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>Modifica Perfiles</title>
+        <link href="../estilos.css" rel="stylesheet" type="text/css"/>
+        <link rel="shortcut icon" type="image/x-icon" href="../imagenes/favicon.ico"/>
+    </h:head>
+    <h:body>
+        <f:view>
+            <h:form>
+                <div class ="container">
+                    <div class="cabecera">
+                        <img src="../logoescom.png" height="60" width="80" align="left"/>
+                        <img src="../ipn_logo.png" width="80px" align="right"/>
+                        <h1>Trabajo Terminal TT 2013-A047</h1>
+                    </div>
+                    <div class="tools">
+                              <p:panelMenu style="width:200px">  
+                                  <p:submenu label="Inicio">  
+                                <p:menuitem value="Monitoreo" url="../Monitoreo.xhtml" icon="ui-icon-disk" /> 
+                             <p:menuitem value="Dashboard"   url="../home.xhtml" icon="ui-icon-arrowrefresh-1-w" />  
+                             <p:menuitem value="Configuracion"   url="../Configuracion.xhtml" icon="ui-icon-arrowrefresh-1-w" /> 
+                            </p:submenu> 
+                            <p:submenu label="Gestión de Agentes">                                  
+                                <p:menuitem value="Nuevo" url="../agentes/GestionEquipos.xhtml" icon="ui-icon-disk" /> 
+                                <p:menuitem value="Modificar"   url="../agentes/ModificaEquipos.xhtml" icon="ui-icon-arrowrefresh-1-w" />  
+                            </p:submenu>  
+                            <p:submenu label ="Gestión de Perfiles">
+                                <p:menuitem value="Crea Perfil" url="./CreaPerfil.xhtml" ajax="false"/>
+                                <p:menuitem value="Asigna Perfiles" url="./AsignaPerfil.xhtml" ajax="false"/>
+                                <p:menuitem value ="Modifica Perfil" url="./ModificaPerfil.xhtml" ajax="false"/>
+                                <p:menuitem value="Elimina Perfiles" url="./EliminaPerfil.xhtml" ajax="false"/>
+                            </p:submenu>
+                            <p:submenu label="Gestión de Alertas">  
+                                <p:menuitem value="Crear nueva Alerta"  url="../alertas/CreaAlerta.xhtml" ajax="false" icon="ui-icon-close"/>  
+                                <p:menuitem value="Modificar Alerta" url="../alertas/ModificaAlerta.xhtml" ajax="false" icon="ui-icon-arrowrefresh-1-w"/>
+                                <p:menuitem value="Activa/Desactiva" url="../alertas/ActivaAlerta.xhtml" ajax ="false" />
+                            </p:submenu>
+                            <p:submenu label="Generación de Reportes">  
+                                <p:menuitem value="Por Perfil" url="../reportes/ReportePerfil.xhtml" ajax="false" icon="ui-icon-close"/>  
+                                <p:menuitem value="Por Equipo"  url="../reportes/ReporteEquipo.xhtml" ajax="false"/>
+                            </p:submenu>  
+                            <p:submenu label="Gestión de Usuarios">
+                                <p:menuitem value="Crea nuevo usuario"  url ="./NuevoUsuario.xhtml" ajax="false"/>
+                                <p:menuitem value="Elimina usuario" url="./EliminaUsuario.xhtml" ajax ="false"/>
+                            </p:submenu>                            
+                            <p:separator /> 
+                        </p:panelMenu>                                                                                      
+                    </div>
+                    <div class="dashboard">
+                        <h:form>
+                        <h:panelGrid columns="2">
+                            <h:outputText value="Usuario"/>
+                            <h:inputText value="#{nuevousuariobean.correoElectronico}"/>
+                            <h:outputText value="Nombre"/>
+                            <h:inputText value="#{nuevousuariobean.nombre}"/>
+                            <h:outputText value="Apellido Paterno"/>
+                            <h:inputText value="#{nuevousuariobean.apPaterno}"/>
+                            <h:outputText value="Apellido Materno"/>
+                            <h:inputText value="#{nuevousuariobean.apMaterno}"/>
+                            <h:outputText value="Password"/>
+                            <h:inputSecret value="#{nuevousuariobean.password}"/>
+                            
+                            <p:commandButton value="Agrega Usuario" actionListener="#{nuevousuariobean.Agregar()}"/>
+                        </h:panelGrid>
+                        </h:form>
+   <p:panel id ="eliminar">
+                            <p:messages id="User" showDetail="true" autoUpdate="true" closable="true" />  
+                            <p:poll interval="3" update="Usuarios"/>
+                            <p:dataTable  id="Usuarios" var="user" value="#{nuevousuariobean.usuario}"  
+                 paginator="true" rows="10"  
+                 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
+                 rowsPerPageTemplate="5,10,15"  >  
+  
+         <f:facet name="header">  
+            Usuarios Existentes 
+        </f:facet>  
+  
+                                <p:column headerText="Usuario">  
+                                    <h:outputText value="#{user.correoElectronico}" />  
+        </p:column>
+                                
+        <p:column headerText="Nombre">  
+            <h:outputText value="#{user.nombre}" />  
+          </p:column>  
+  
+        <p:column headerText="Apellido Paterno">  
+            <h:outputText value="#{user.apPAterno}" />  
+        </p:column>   
+                          <p:column headerText="Apellido Materno">  
+                              <h:outputText value="#{user.apMaterno}" />  
+          </p:column>  
+  
+        
+                                
+    </p:dataTable>
+                            
+                        </p:panel>
+                        </div>
+                </div>
+            </h:form>
+        </f:view>
+    </h:body>
+</html>
+

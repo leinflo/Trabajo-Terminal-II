@@ -1,0 +1,72 @@
+/* 
+    Document   : estilos
+    Created on : 31-mar-2014, 13:05:15
+    Author     : DanielFlores
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+body{
+    background-image: url('./imagenes/fondo1.jpg');
+    
+}
+
+div.login{
+background-color: #E0F2F9;
+width:250px;
+padding:10px;
+border:5px solid blue;
+border-style:groove;
+margin:10px;
+    
+}
+div.tools{
+float:left ;
+height: 30%;
+width: 12.2%;
+border-style:groove;
+border:5px groove #3399ff;
+}
+
+div.opcion{
+float: top;
+height: 30px;
+width: 100%;
+background-color: gray;
+text-align: justify;
+}
+
+div.cabecera{
+font: small-caps 100%/200% serif;
+background-color: #E0F2F9;
+width:98%;
+height:80px;
+padding:10px;
+border:5px groove #3399ff;
+}
+
+div.dashboard{
+display: inline-block;
+border:5px groove #3399ff ;
+height: 100%;
+width: 86.3%;
+
+}
+
+div.container {
+    width:100%;
+    text-align:center;
+}
+
+p.login{
+    color: red;
+}
+
+div.login{
+background-color: #E0F2F9;
+width:250px;
+padding:10px;
+border:5px solid blue;
+margin:10px;
+    
+}

@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+    Document   : welcome
+    Created on : 25-feb-2014, 9:36:30
+    Author     : DanielFlores
+-->
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+    <h:head>
+        <title>Crea Perfiles</title>
+        <link href="../estilos.css" rel="stylesheet" type="text/css"/>
+        <link rel="shortcut icon" type="image/x-icon" href="../imagenes/favicon.ico"/>
+    </h:head>
+    <h:body>
+        <f:view>
+            <h:form>
+                <div class ="container">
+                    <div class="cabecera">
+                        <img src="../logoescom.png" height="60" width="80" align="left"/>
+                        <img src="../ipn_logo.png" width="80px" align="right"/>
+                        <h1>Trabajo Terminal TT 2013-A047</h1>
+                    </div>
+                    <div class="tools">
+                        <p:panelMenu style="width:200px">  
+                            <p:submenu label="Inicio">  
+                                <p:menuitem value="Monitoreo" url="../Monitoreo.xhtml" icon="ui-icon-disk" /> 
+                                <p:menuitem value="Dashboard"   url="../home.xhtml" icon="ui-icon-arrowrefresh-1-w" />  
+                                <p:menuitem value="Configuracion"   url="../Configuracion.xhtml" icon="ui-icon-arrowrefresh-1-w" /> 
+                            </p:submenu> 
+                            <p:submenu label="Gestión de Agentes">  
+                                <p:menuitem value="Nuevo" url="../agentes/GestionEquipos.xhtml" icon="ui-icon-disk" /> 
+                                <p:menuitem value="Modificar"   url="../agentes/ModificaEquipos.xhtml" icon="ui-icon-arrowrefresh-1-w" />  
+                            </p:submenu>  
+                            <p:submenu label ="Gestión de Perfiles">
+                                <p:menuitem value="Crea Perfil" url="./CreaPerfil.xhtml" ajax="false"/>
+                                <p:menuitem value="Asigna Perfiles" url="./AsignaPerfil.xhtml" ajax="false"/>
+                                <p:menuitem value ="Modifica Perfil" url="./ModificaPerfil.xhtml" ajax="false"/>
+                                <p:menuitem value="Elimina Perfiles" url="./EliminaPerfil.xhtml" ajax="false"/>
+                            </p:submenu>
+                            <p:submenu label="Gestión de Alertas">  
+                                <p:menuitem value="Crear nueva Alerta"  url="../alertas/CreaAlerta.xhtml" ajax="false" icon="ui-icon-close"/>  
+                                <p:menuitem value="Modificar Alerta" url="../alertas/ModificaAlerta.xhtml" ajax="false" icon="ui-icon-arrowrefresh-1-w"/>
+                                <p:menuitem value="Activa/Desactiva" url="../alertas/ActivaAlerta.xhtml" ajax ="false" />
+                            </p:submenu>
+                            <p:submenu label="Generación de Reportes">  
+                                <p:menuitem value="Por Perfil" url="../reportes/ReportePerfil.xhtml" ajax="false" icon="ui-icon-close"/>  
+                                <p:menuitem value="Por Equipo"  url="../reportes/ReporteEquipo.xhtml" ajax="false"/>
+                            </p:submenu>  
+                            <p:submenu label="Gestión de Usuarios">
+                                <p:menuitem value="Crea nuevo usuario"  url ="../usuarios/NuevoUsuario.xhtml" ajax="false"/>
+                                <p:menuitem value="Elimina usuario" url="../usuario/EliminaUsuario.xhtml" ajax ="false"/>
+                            </p:submenu>                            
+                            <p:separator /> 
+                        </p:panelMenu>                                                                                      
+                    </div>
+                    <div class="dashboard">
+
+                        <!--VISTA DE LA CREACIÓN DE PERFILES -->
+
+                        <h:form id="form">  
+
+                            <p:growl id="growl" showDetail="true" />  
+
+                            <p:tabView id="tabView" dynamic="true">  
+
+
+
+                                <p:tab title="Crea Perfil" id="crea">  
+                                    <h:panelGrid columns="6">
+
+                                        <h:outputText value="Nombre del Perfil: " />
+                                        <h:inputText id="nombrePerfil" value="#{creaperfilesbean.nombre}" />
+                                        <h:outputText value="Respuesta activa: "/>
+                                        <h:inputText id="respuesta_activa" value="#{creaperfilesbean.respuestaActiva}" maxlength="2"/>
+                                        <h:outputText value="Número de hits"/>
+                                        <h:inputText id="num_hits" value="#{creaperfilesbean.numHits}" />
+                                        <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" /> 
+                                    </h:panelGrid>
+                                    <p:panel id="procesos">                                
+                                        <p:pickList id="pojoPickLista" value="#{creaperfilesbean.proce}" var="proce" 
+                                                    itemValue="#{proce}" itemLabel="#{proce}"   
+                                                    showSourceFilter="true" showTargetFilter="true" filterMatchMode="contains" >  
+
+                                            <f:facet name="sourceCaption">Procesos</f:facet>  
+                                            <f:facet name="targetCaption">A Perfil</f:facet>  
+
+                                        </p:pickList>  
+                                    </p:panel>
+
+                                    <p:panel id="rutas">
+                                        <p:pickList id="pojoPickList" value="#{creaperfilesbean.rutas}" var="rutas" 
+                                                    itemValue="#{rutas}" itemLabel="#{rutas}"   
+                                                    showSourceFilter="true" showTargetFilter="true" filterMatchMode="contains" >  
+
+                                            <f:facet name="sourceCaption">Rutas</f:facet>  
+                                            <f:facet name="targetCaption">A Perfil</f:facet>  
+
+                                        </p:pickList> 
+
+                                    </p:panel>
+                                    <p:panel>
+                                        <p:commandButton value="Crea Perfil" actionListener="#{creaperfilesbean.crearPerfil}"/>
+
+                                    </p:panel>
+
+
+                                </p:tab>  
+
+                                <p:tab title="Agrega procesos" id="addproc">  
+                                    <p:panel id="Procesos">
+                                        <h:outputText id="new" value="Nuevo Proceso" />
+                                        <h:inputText id="nuevo" value="#{creaperfilesbean.nombre2}"/>
+                                        <p:messages  id="messages2" showDetail="true" autoUpdate="true" closable="true" /> 
+                                        <p:commandButton value="Agrega" actionListener="#{creaperfilesbean.insertaNuevo}"/>
+                                        <p:poll interval="3" update="Proc"/>
+                                        <p:dataTable  id="Proc" var="procesos" value="#{creaperfilesbean.procesos}"  
+                                                      paginator="true" rows="10"  
+                                                      paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
+                                                      rowsPerPageTemplate="5,10,15"  >  
+
+                                            <f:facet name="header">  
+                                                Lista de Procesos Registrados 
+                                            </f:facet>  
+
+                                            <p:column headerText="Identificador">  
+                                                <h:outputText value="#{procesos.id}" />  
+                                            </p:column>  
+
+                                            <p:column headerText="Proceso">  
+                                                <h:outputText value="#{procesos.nombre}" />  
+                                            </p:column>    
+                                        </p:dataTable>
+                                    </p:panel>
+
+                                </p:tab>  
+
+                                <p:tab title="Agrega rutas" id="addpath">  
+                                    <p:panel id="Rutas">
+                                        <h:outputText id="new2" value="Nueva Ruta" />
+                                        <h:inputText id="nuevo2" value="#{creaperfilesbean.nombre2}"/>
+                                        <p:messages  id="messages3" showDetail="true" autoUpdate="true" closable="true" /> 
+                                        <p:commandButton value="Agrega" actionListener="#{creaperfilesbean.insertaRuta()}"/>
+                                        <p:poll interval="3" update="routes"/>
+                                        <p:dataTable  id="routes" var="paths" value="#{creaperfilesbean.paths}"  
+                                                      paginator="true" rows="10"  
+                                                      paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
+                                                      rowsPerPageTemplate="5,10,15"  >  
+
+                                            <f:facet name="header">  
+                                                Lista de Procesos Registrados 
+                                            </f:facet>  
+
+                                            <p:column headerText="Identificador">  
+                                                <h:outputText value="#{paths.id}" />  
+                                            </p:column>  
+
+                                            <p:column headerText="Ruta">  
+                                                <h:outputText value="#{paths.rutas}" />  
+                                            </p:column>    
+                                        </p:dataTable>
+                                    </p:panel>
+                                </p:tab>  
+
+                            </p:tabView>  
+
+                        </h:form>  
+
+
+                    </div>
+                </div>
+            </h:form>
+        </f:view>
+    </h:body>
+</html>
+

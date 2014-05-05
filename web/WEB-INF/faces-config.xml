@@ -1,0 +1,151 @@
+<?xml version='1.0' encoding='UTF-8'?>
+
+<!-- =========== FULL CONFIGURATION FILE ================================== -->
+
+<faces-config version="2.1"
+              xmlns="http://java.sun.com/xml/ns/javaee"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facesconfig_2_1.xsd">
+    <application> 
+        <locale-config>
+            <default-locale>en</default-locale>
+            <supported-locale>de</supported-locale> 
+        </locale-config>
+    </application>
+    <navigation-rule> 
+        <from-view-id>/index.xhtml</from-view-id> 
+        <navigation-case>
+            <from-outcome>exito</from-outcome>
+            <to-view-id>/home.xhtml</to-view-id>
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>fracaso</from-outcome>
+            <to-view-id>/index.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    
+    <managed-bean>
+        <managed-bean-name>usuario</managed-bean-name> 
+        <managed-bean-class>Clases_TTII.LoginBean</managed-bean-class> 
+        <managed-bean-scope>session</managed-bean-scope>
+    </managed-bean>
+
+    <managed-bean>
+        <managed-bean-name>valida</managed-bean-name>
+        <managed-bean-class>Clases_TTII.Control_Usuario</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
+    </managed-bean>
+    <managed-bean>
+        <managed-bean-name>gestionaUser</managed-bean-name>
+        <managed-bean-class>Clases_TTII.GestionEquiposBean</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
+    </managed-bean>
+    <managed-bean>
+        <managed-bean-name>dashboardBean</managed-bean-name>
+        <managed-bean-class>Clases_TTII.DashboardBean</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
+    </managed-bean>
+        <managed-bean>
+        <managed-bean-name>equipos</managed-bean-name>
+        <managed-bean-class>Acceso_Datos.Equipos</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
+    </managed-bean>
+    
+    <managed-bean>
+        <managed-bean-name>procesos</managed-bean-name>
+        <managed-bean-class>Acceso_Datos.Procesos</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
+    </managed-bean>
+    
+        <managed-bean>
+        <managed-bean-name>perfiles</managed-bean-name>
+        <managed-bean-class>Acceso_Datos.Procesos</managed-bean-class>
+    
+        <managed-bean-scope>request</managed-bean-scope></managed-bean>
+        
+        <managed-bean>
+        <managed-bean-name>equipoperfil</managed-bean-name>
+        <managed-bean-class>Acceso_Datos.AsignaPerfil</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope></managed-bean>
+        
+        
+    <managed-bean>
+        <managed-bean-name>creaperfilesbean</managed-bean-name>
+        <managed-bean-class>Clases_TTII.CreaPerfilBean</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
+    </managed-bean>
+    
+    <managed-bean>
+        <managed-bean-name>modificaperfilbean</managed-bean-name>
+        <managed-bean-class>Clases_TTII.ModificaPerfilBean</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
+    </managed-bean>
+    
+    <managed-bean>
+        <managed-bean-name>asignaperfilbean</managed-bean-name>
+        <managed-bean-class>Clases_TTII.AsignaPerfilBean</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
+    </managed-bean>
+    
+    <managed-bean>
+        <managed-bean-name>alertas</managed-bean-name>
+        <managed-bean-class>Clases_TTII.AlertasBean</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
+    </managed-bean>
+    
+    
+    <managed-bean>
+        <managed-bean-name>alerts</managed-bean-name>
+        <managed-bean-class>Acceso_Datos.Alertas</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
+    </managed-bean>
+    
+    <managed-bean>
+        <managed-bean-name>EliminaPerfilbean</managed-bean-name>
+        <managed-bean-class>Clases_TTII.EliminaPerfilBean</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
+    </managed-bean> 
+    
+    <managed-bean>
+        <managed-bean-name>monitoreobean</managed-bean-name>
+        <managed-bean-class>Clases_TTII.MonitoreoBean</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
+    </managed-bean>
+    
+    <managed-bean>
+        <managed-bean-name>Eliminaperfil</managed-bean-name>
+        <managed-bean-class>Acceso_Datos.EliminaPerfil</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
+    </managed-bean>
+    
+    <managed-bean>
+        <managed-bean-name>Eliminap</managed-bean-name>
+        <managed-bean-class>Acceso_Datos.EliminaP</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
+    </managed-bean>
+    
+    <managed-bean>
+        <managed-bean-name>monfiles</managed-bean-name>
+        <managed-bean-class>Acceso_Datos.Mon_files</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
+    </managed-bean>
+    
+    <managed-bean>
+        <managed-bean-name>monproc</managed-bean-name>
+        <managed-bean-class>Acceso_Datos.Mon_proc</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
+    </managed-bean>
+    
+    <managed-bean>
+        <managed-bean-name>activadesactbean</managed-bean-name>
+        <managed-bean-class>Clases_TTII.Activa_DesactivaBean</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
+    </managed-bean>
+    
+    <managed-bean>
+        <managed-bean-name>reporteequiposbean</managed-bean-name>
+        <managed-bean-class>Clases_TTII.ReporteEquiposBean</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
+    </managed-bean>
+
+</faces-config>

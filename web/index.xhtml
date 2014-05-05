@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this template, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+    
+      <h:head>
+         <title>Trabajo Terminal TT 2013-A047</title>
+         <link href="estilos.css" rel="stylesheet" type="text/css"/>
+         <link rel="shortcut icon" type="image/x-icon" href="./imagenes/favicon.ico"/>
+      </h:head>
+      <h:body>
+         <h:form>
+             
+             <div align="center">
+                 <div class="cabecera">
+                     <img src="logoescom.png" height="60" width="80" align="left"/>
+                     <img src="ipn_logo.png" width="80px" align="right"/>
+                     <h1>Trabajo Terminal TT 2013-A047</h1>
+                     
+                 </div>
+                 <div class="login" >
+             <h3>Acceso</h3>
+            <table> 
+               <tr>
+                  <td>Nombre:</td>
+                  <td>
+                      <h:inputText value="#{valida.user}" required="true"/>
+                  </td> 
+                    </tr> <tr>
+                    <td>Password:</td>
+                  <td>
+                      <h:inputSecret value="#{valida.contrasena}" required="true"/>
+                  </td>
+               </tr>
+            </table>
+  
+             <p>
+               <h:commandButton  id="invalido" value="Acceder" action="#{valida.verificaUser}"/>
+               <p:messages id="mensajes" showDetail="true" autoUpdate="true" closable="true" /> 
+               <h:panelGroup rendered="#{valida.exito == 'fracaso'}">
+                   <!--p:message display="" /-->
+              <p class ="login"> ¡Usuario o contraseña invalidos!</p>
+               </h:panelGroup>
+               <h:panelGroup rendered="#{valida.exito == 'no fracaso'}">
+               <p class ="login"> ¡Error de conexión!</p>
+               </h:panelGroup>
+           </p>
+                 </div>
+            </div>
+         </h:form>
+      </h:body>
+</html>
