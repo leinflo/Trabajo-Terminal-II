@@ -3,20 +3,78 @@ import javax.activation.*;
 import javax.mail.*; 
 import javax.mail.internet.*;
 import java.util.Properties;
+import Acceso_Datos.*;
+import Acceso_Datos.Base_Datos;
+import java.util.List;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.ArrayList;
 
 public class NewClass 
 {
 
-private static String USER_NAME = "flores.herrera.daniel";  // GMail user name (just the part before "@gmail.com")
-    private static String PASSWORD = "nesssamus"; // GMail password
-    private static String RECIPIENT = "agdanihe@hotmail.com";
-
     public static void main(String[] args) {       
-        String para = "Java send mail example";
-        String asunto = "Welcome to JavaMail!";
-        String mensaje ="kiubo!!!";
-
+        try{
+        int i=0, id_alerta_hist;
+        Base_Datos DB = new Base_Datos();
+        Connection con;
+        PreparedStatement ps ;
+       ResultSet rs;
+       String query = "select id_alerta_hist, correo_electronico, mf.*,mp.* from alertas_hist ah inner join Alertas a on a.id_alerta = ah.id_alerta left outer join Mon_files mf on mf.ID = ah.idmonfiles left outer join Mon_Proc mp on mp.ID = ah.idmonproc where ah.enviado=0 ";       
+       con = DB.conecta();
+       ps = con.prepareStatement(query);
+       rs = ps.executeQuery(query);
+       List<Integer> enviados = new ArrayList<Integer>();
+       String para;
+        String asunto = "ALERTA!";
+        while(rs.next()){            
+            id_alerta_hist = rs.getInt(1);
+        para  = rs.getString(2);
+        String mensaje = "<h1>Alerta " + id_alerta_hist +"</h1>";
+        if(rs.getString(3)!=null){
+        mensaje += "<h1>CAMBIO EN UN ARCHIVO O CARPETA</h1>";
+        mensaje += "<p> Agente: "+rs.getString(4) +"</p>";
+        mensaje += "<p> Usuario:"+rs.getString(5) +"</p>";
+        mensaje += "<p> Archivo: "+rs.getString(6) +"</p>";
+        if(rs.getString(7)!=null){
+        mensaje += "<p> Archivo renombrado: "+rs.getString(7) +"</p>";
+        }
+        mensaje+= "<p>Tipo de cambio: "+rs.getString(8)+"</p>";
+        mensaje+= "<p>Momento del cambio: "+rs.getString(9) +"</p>";        
+        
         sendFromGMail(para,asunto,mensaje);
+        enviados.add(id_alerta_hist);     
+        i++;
+        }
+
+        
+        else{
+       mensaje += "<h1>Ejecución de un proceso no autorizado</h1>";
+        mensaje += "<p> Agente: "+rs.getString(11) +"</p>";
+        mensaje += "<p> Usuario:"+rs.getString(12) +"</p>";
+        mensaje += "<p> Nombre del proceso: "+rs.getString(13) +"</p>";        
+        mensaje+= "<p>Momento de la ejecución: "+rs.getString(14) +"</p>";   
+        
+        sendFromGMail(para,asunto,mensaje);
+        enviados.add(id_alerta_hist);
+        i++;
+        System.out.println(i);
+        }                
+        }
+        int b;
+        for(b=0;b<i;b++){
+            System.out.println("id_alertas_hist = "+enviados.get(b));
+        query = "update alertas_hist set enviado = 1 where id_alerta_hist = "+enviados.get(b);
+        ps = con.prepareStatement(query);        
+        ps.execute(query);
+        ps.close();
+        }
+        con.close();
+        }
+        catch(Exception e){
+            e.printStackTrace();
+    }
     }
 
     public static void sendFromGMail(String para, String asunto, String mensaje) {
@@ -40,11 +98,11 @@ private static String USER_NAME = "flores.herrera.daniel";  // GMail user name (
             
             message.setFrom(new InternetAddress("alguien"));
             
-            message.addRecipient(Message.RecipientType.TO, new InternetAddress("alejandroberman@hotmail.com"));
+            message.addRecipient(Message.RecipientType.TO, new InternetAddress(para));
             
             message.setSubject(asunto);
             
-            message.setText(mensaje);
+            message.setText(mensaje, "utf-8", "html");
             
             //Envio de mensaje
             

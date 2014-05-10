@@ -4,14 +4,17 @@
  */
 package Clases_TTII;
 
+import Acceso_Datos.Base_Datos;
+import java.io.IOException;
+import java.sql.*;
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.*;
-import javax.sql.*;
-import javax.faces.context.FacesContext;
 import javax.faces.application.FacesMessage;
-import Acceso_Datos.Base_Datos;
+import javax.faces.context.ExternalContext;
+import javax.faces.context.FacesContext;
+import javax.faces.event.ActionEvent;
 import javax.servlet.http.HttpServletRequest;
+import javax.sql.*;
     
 /**
  *
@@ -24,15 +27,15 @@ public class Control_Usuario {
     //private final HttpServletRequest httpServletRequest;
       //private final FacesContext faceContext;
 public LoginBean usuario;
-public String user ="uno", contrasena="dos";
+public String user, contrasena;
 String exito;
 private DataSource ds;
 private Base_Datos DB = new Base_Datos();
     
     public Control_Usuario(){
-        /*faceContext=FacesContext.getCurrentInstance();
+        faceContext=FacesContext.getCurrentInstance();
         httpServletRequest=(HttpServletRequest)faceContext.getExternalContext().getRequest();
-        usuario = new LoginBean();*/
+        /*usuario = new LoginBean();*/
     }    
     
     public LoginBean getUsuario(){
@@ -80,13 +83,15 @@ private Base_Datos DB = new Base_Datos();
             ps = con.prepareStatement(query);
             
             rs = ps.executeQuery(query);
-            System.out.println("antes del while");
-            System.out.println(user);
+            //System.out.println("antes del while");
+            //System.out.println(user);
 
             rs.next();
-            System.out.println(rs.getInt("existe"));
+            //System.out.println(rs.getInt("existe"));
             if(rs.getInt("existe") == 1){
-                System.out.println("regresa exito");
+                //System.out.println("regresa exito");
+                httpServletRequest.getSession().setAttribute("sessionUsuario",user);
+                      
                 ps.close();
                 con.close();
                 // httpServletRequest.getSession().setAttribute("sessionUsuario", user);
@@ -95,7 +100,7 @@ private Base_Datos DB = new Base_Datos();
             else{
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"ERROR!","¡Usuario o contraseña invalidos!"));
                     exito= "fracaso";
-                    System.out.println("regresa fracaso");
+                    //System.out.println("regresa fracaso");
                     ps.close();
                     con.close();
                 return "fracaso";
@@ -110,6 +115,32 @@ private Base_Datos DB = new Base_Datos();
             return "fracaso";
         }
     }
+    private HttpServletRequest httpServletRequest;
+    private FacesContext faceContext;
+    public void redirecciona(){
+            
+           try{
+            
+            ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
+            faceContext =  FacesContext.getCurrentInstance();
+            httpServletRequest =(HttpServletRequest)faceContext.getExternalContext().getRequest();
+            if(httpServletRequest.getSession().getAttribute("sessionUsuario")==null){
+                ec.redirect(ec.getRequestContextPath()+"/faces/index.xhtml");
+            }
+            else{
+            user = httpServletRequest.getSession().getAttribute("sessionUsuario").toString();
+            }
+           }
+           catch(Exception e){
+            e.printStackTrace();  
+        }
+        }
     
-    
+    public void logout(ActionEvent ae)throws IOException{
+        
+        ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
+        ec.invalidateSession();
+        ec.redirect(ec.getRequestContextPath()+"/faces/index.xhtml");
+                
+    }
 }

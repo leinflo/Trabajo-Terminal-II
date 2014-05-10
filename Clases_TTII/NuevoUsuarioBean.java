@@ -31,7 +31,7 @@ public class NuevoUsuarioBean {
     public String getCorreoElectronico(){return this.correoElectronico;}
     public String getPassword(){return this.password;}
     public void setNombre(String nombre){this.nombre = nombre;}
-    public void setApPAterno(String apPaterno){ this.apPaterno = apPaterno;}
+    public void setApPaterno(String apPaterno){ this.apPaterno = apPaterno;}
     public void setApMaterno(String apMaterno){ this.apMaterno = apMaterno;}
     public void setCorreoElectronico(String correoElectronico){this.correoElectronico= correoElectronico;}
     public void setPassword(String password){this.password = password;}
@@ -55,6 +55,29 @@ public class NuevoUsuarioBean {
         }
         else{
         FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL,"ERROR!", "Todos los campos son requeridos"));
+        }
+        
+    }
+    
+    public void Eliminar(){
+        int exito;
+        if(!correoElectronico.isEmpty()){
+        //System.out.println("entra al metodo");
+        exito = user.ElminaUsuario(correoElectronico);
+        if(exito ==0){
+         FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,"EXITO!", "Se eliminó el usuario "+correoElectronico));
+        }
+        else{
+        if(exito==1){
+         FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"ERROR!", "El usuario "+correoElectronico+" no existe!"));
+        }
+        else{
+         FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL,"ERROR!", "Error en la base de datos"));
+        }
+        }
+        }
+        else{
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL,"ERROR!", "Se requiere el nombre del usuario"));
         }
         
     }
