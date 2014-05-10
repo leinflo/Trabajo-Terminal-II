@@ -12,6 +12,9 @@
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:f="http://java.sun.com/jsf/core"
       xmlns:p="http://primefaces.org/ui">
+    <f:metadata>
+        <f:event type="preRenderView" listener="#{valida.redirecciona}"/>
+        </f:metadata>
     <h:head>
         <title>Modifica Perfiles</title>
         <link href="../estilos.css" rel="stylesheet" type="text/css"/>
@@ -62,18 +65,18 @@
                     <div class="dashboard">
                         <h:form>
                         <h:panelGrid columns="2">
-                            <h:outputText value="Usuario"/>
+                            <p:outputLabel value="Usuario"/>
                             <h:inputText value="#{nuevousuariobean.correoElectronico}"/>
-                            <h:outputText value="Nombre"/>
+                            <p:outputLabel value="Nombre"/>
                             <h:inputText value="#{nuevousuariobean.nombre}"/>
-                            <h:outputText value="Apellido Paterno"/>
+                            <p:outputLabel value="Apellido Paterno"/>
                             <h:inputText value="#{nuevousuariobean.apPaterno}"/>
-                            <h:outputText value="Apellido Materno"/>
+                            <p:outputLabel value="Apellido Materno"/>
                             <h:inputText value="#{nuevousuariobean.apMaterno}"/>
-                            <h:outputText value="Password"/>
+                            <p:outputLabel value="Password"/>
                             <h:inputSecret value="#{nuevousuariobean.password}"/>
                             
-                            <p:commandButton value="Agrega Usuario" actionListener="#{nuevousuariobean.Agregar()}"/>
+                            <p:commandButton value="Agrega Usuario" actionListener="#{nuevousuariobean.Agregar}"/>
                         </h:panelGrid>
                         </h:form>
    <p:panel id ="eliminar">

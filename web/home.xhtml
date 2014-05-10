@@ -13,6 +13,9 @@
       xmlns:f="http://java.sun.com/jsf/core"
       xmlns:p="http://primefaces.org/ui">
     <h:head>
+        <f:metadata>
+        <f:event type="preRenderView" listener="#{valida.redirecciona}"/>
+        </f:metadata>
         <title>HOME</title>
         <link href="estilos.css" rel="stylesheet" type="text/css"/>
         <link rel="shortcut icon" type="image/x-icon" href="./imagenes/favicon.ico"/>
@@ -61,6 +64,7 @@
                         </p:submenu>                            
                         <p:separator /> 
                     </p:panelMenu>
+                         <p:commandButton value="Cerrar Sesión" actionListener="#{valida.logout}"/>
                      </div>
                                <p:growl id="growl" showDetail="true" />      
                                <h:panelGrid columns="3">

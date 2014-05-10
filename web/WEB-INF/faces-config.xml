@@ -147,5 +147,16 @@
         <managed-bean-class>Clases_TTII.ReporteEquiposBean</managed-bean-class>
         <managed-bean-scope>request</managed-bean-scope>
     </managed-bean>
-
+    
+    <managed-bean>
+        <managed-bean-name>nuevousuariobean</managed-bean-name>
+        <managed-bean-class>Clases_TTII.NuevoUsuarioBean</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
+    </managed-bean>
+    
+<managed-bean>
+        <managed-bean-name>reporteperfilbean</managed-bean-name>
+        <managed-bean-class>Clases_TTII.ReportePerfilBean</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
+    </managed-bean>
 </faces-config>

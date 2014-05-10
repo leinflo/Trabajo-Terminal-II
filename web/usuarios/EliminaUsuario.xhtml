@@ -12,6 +12,9 @@
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:f="http://java.sun.com/jsf/core"
       xmlns:p="http://primefaces.org/ui">
+    <f:metadata>
+        <f:event type="preRenderView" listener="#{valida.redirecciona}"/>
+        </f:metadata>
     <h:head>
         <title>Modifica Perfiles</title>
         <link href="../estilos.css" rel="stylesheet" type="text/css"/>
@@ -60,7 +63,46 @@
                         </p:panelMenu>                                                                                      
                     </div>
                     <div class="dashboard">
-   
+   <h:form>
+                        <h:panelGrid columns="2">
+                            <p:outputLabel value="Usuario"/>
+                            <h:inputText value="#{nuevousuariobean.correoElectronico}"/>
+                            
+                            <p:commandButton value="Eliminar Usuario" actionListener="#{nuevousuariobean.Eliminar}"/>
+                        </h:panelGrid>
+                        </h:form>
+   <p:panel id ="eliminar">
+                            <p:messages id="User" showDetail="true" autoUpdate="true" closable="true" />  
+                            <p:poll interval="3" update="Usuarios"/>
+                            <p:dataTable  id="Usuarios" var="user" value="#{nuevousuariobean.usuario}"  
+                 paginator="true" rows="10"  
+                 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
+                 rowsPerPageTemplate="5,10,15"  >  
+  
+         <f:facet name="header">  
+            Usuarios Existentes 
+        </f:facet>  
+  
+                                <p:column headerText="Usuario">  
+                                    <h:outputText value="#{user.correoElectronico}" />  
+        </p:column>
+                                
+        <p:column headerText="Nombre">  
+            <h:outputText value="#{user.nombre}" />  
+          </p:column>  
+  
+        <p:column headerText="Apellido Paterno">  
+            <h:outputText value="#{user.apPAterno}" />  
+        </p:column>   
+                          <p:column headerText="Apellido Materno">  
+                              <h:outputText value="#{user.apMaterno}" />  
+          </p:column>  
+  
+        
+                                
+    </p:dataTable>
+                            
+                        </p:panel>
                         </div>
                 </div>
             </h:form>

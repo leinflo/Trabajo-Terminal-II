@@ -12,6 +12,9 @@
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:f="http://java.sun.com/jsf/core"
       xmlns:p="http://primefaces.org/ui">
+    <f:metadata>
+        <f:event type="preRenderView" listener="#{valida.redirecciona}"/>
+        </f:metadata>
     <h:head>
         <title>Reporte por Perfiles</title>
         <link href="../estilos.css" rel="stylesheet" type="text/css"/>
@@ -60,7 +63,18 @@
                         </p:panelMenu>                                                                                      
                     </div>
                     <div class="dashboard">
-   
+                       <h:form id="RepoPerfil">
+                            <p:messages id="mensajeAsigna" showDetail="true" autoUpdate="true" closable="true" />   
+                            <h:panelGrid columns="7">
+                                <p:selectCheckboxMenu value="#{reporteperfilbean.selectedPerfil}" label="Perfil" filter="true" filterMatchMode="startsWith" panelStyle="width:300px">  
+                                    <f:selectItems value="#{reporteperfilbean.perfil}" />  
+                            </p:selectCheckboxMenu> 
+                                <h:commandButton value="PDF" actionListener="#{reporteperfilbean.PDFMonProc}"/>
+                                <h:commandButton value="DOC" actionListener="#{reporteperfilbean.DOCMonProc}"/>
+                                <h:commandButton value="Excel" actionListener="#{reporteperfilbean.XLSMonProc}"/>
+                                </h:panelGrid>
+                        </h:form>
+                        
                         </div>
                 </div>
             </h:form>
