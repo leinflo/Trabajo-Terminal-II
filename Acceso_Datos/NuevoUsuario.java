@@ -52,6 +52,37 @@ public class NuevoUsuario {
         }
     }
     
+    public int ElminaUsuario(String correo){
+        try{
+        Connection con;
+        PreparedStatement ps;
+        ResultSet rs;
+        String query;
+        System.out.println("entra al metodo elimina usuario");
+        con = DB.conecta();
+        query = "select count(*) from usuarios where correo_electronico = '"+correo+"'";
+        ps = con.prepareStatement(query);
+        rs = ps.executeQuery(query);
+        rs.next();
+        if(rs.getInt(1)==1){
+            ps.close();
+            query = "delete from usuarios where correo_electronico ='"+correo+"'";
+            ps = con.prepareStatement(query);
+            ps.execute(query);
+            con.close();
+        return 0;
+        }
+        else{
+        con.close();
+        return 1;
+        }             
+        }
+        catch(Exception e){
+        e.printStackTrace();
+        return 3;
+        }
+    }
+    
     public List<Usuario> llenaUsuarios(){
     try{
         Connection con;
