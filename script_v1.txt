@@ -1,0 +1,172 @@
+create database Trabajo_Terminal_II;
+
+use Trabajo_Terminal_II;
+
+create table usuarios (
+id_usuario int auto_increment primary key not null,
+nombre varchar(30) not null,
+apellido_paterno varchar(50) not null,
+apellido_materno varchar(50),
+correo_electronico varchar(50) not null,
+password varchar(50) not null
+);
+
+alter table usuarios add unique (correo_electronico);
+
+create table Mon_Proc(
+ID int auto_increment primary key not null,
+agente varchar(15),
+user varchar(50),
+nombre_proc varchar(100),
+inicio_proc varchar(100),
+fin_proc varchar(100)
+);
+
+create table Mon_files(
+ID int auto_increment primary key not null,
+agente varchar(15),
+user varchar(50),
+archivo varchar(200),
+archivo_despues varchar(200),
+tipo_cambio varchar(50),
+momento_de_cambio varchar(50)
+);
+
+create table Equipos(
+ID_equipo int auto_increment primary key not null,
+Direccion_IP varchar(15),
+digesto_de_verificacion varchar(50),
+verificado varchar(2),
+conectado varchar(2)
+);
+
+create table cat_procesos(
+ID_proceso int auto_increment primary key not null,
+nombre varchar(50)
+);
+
+create table cat_rutas(
+ID_ruta int auto_increment primary key not null,
+ruta varchar(200)
+);
+
+create table cat_perfiles(
+ID_perfil int auto_increment primary key not null,
+perfil varchar(20) unique,
+respuesta_activa int,
+numhits int
+);
+
+create table perfil_procesos(
+ID_perfil_proc int auto_increment primary key not null,
+ID_perfil int not null,
+ID_proceso int not null,
+foreign key(ID_perfil) references cat_perfiles (ID_perfil) on delete cascade,
+foreign key(ID_proceso) references cat_procesos(ID_proceso)
+);
+
+create table perfil_rutas(
+ID_perfil_ruta int auto_increment primary key not null,
+ID_perfil int not null,
+ID_ruta int not null,
+foreign key(ID_perfil) references cat_perfiles (ID_perfil) on delete cascade,
+foreign key(ID_ruta) references cat_rutas(ID_ruta)
+);
+
+create table perfil_equipo(
+ID_perfil_equipo int auto_increment primary key not null,
+ID_perfil int not null,
+ID_equipo int not null,
+foreign key(ID_perfil) references cat_perfiles (ID_perfil) on delete cascade,
+foreign key(ID_equipo) references Equipos(ID_equipo) 
+);
+
+ALTER TABLE `Trabajo_Terminal_II_v2`.cat_rutas ADD UNIQUE KEY ruta_unica (ruta);
+
+ALTER TABLE `Trabajo_Terminal_II_v2`.cat_perfiles ADD UNIQUE KEY perfil_unico (perfil);
+
+create table Alertas (
+id_alerta int primary key auto_increment,
+nombre varchar(50) not null unique,
+correo_electronico  varchar(50) not null,
+activa int not null
+);
+
+create table alerta_equipo(
+id_alerta_equipo int primary key auto_increment,
+id_equipo int,
+id_alerta int,
+FOREIGN key (id_equipo) references Equipos(id_equipo),
+foreign key (id_alerta) references Alertas(id_alerta)
+);
+
+create table reportes_equipos(
+id_reporte_equipo int primary key auto_increment,
+ruta_reporte varchar(150) unique not null,
+fecha_creacion date
+);
+
+create table reportes_perfiles(
+id_reporte_perfil int primary key auto_increment,
+ruta_reporte varchar(150) unique not null,
+fecha_creacion date
+);
+ 
+create table configuracion(
+id_conf int primary key auto_increment,
+smtp varchar(50),
+puerto varchar(6),
+correo_desde varchar(50),
+password varchar(50)
+);
+
+create table alertas_hist(
+id_alerta_hist int auto_increment primary key not null,
+id_alerta int,
+enviado int not null,
+idmonfiles int,
+idmonproc int
+);
+
+insert into usuarios values(NULL,’admin’,’admin’,’admin’,’admin’,’admin’);
+
+delimiter $$
+create trigger insertaalertafiles after insert on Mon_files
+for each row
+begin
+	declare direccionIP varchar(20);
+	declare idAlerta int;
+	set direccionIP = NEW.agente;
+	set  idAlerta =	(select a.id_alerta from Alertas a
+inner join alerta_equipo ae
+on ae.id_alerta = a.id_alerta
+inner join Equipos e
+on e.id_equipo = ae.id_equipo
+where e.direccion_IP = direccionIP
+and a.activa =1);
+	if idAlerta > 0
+	then 
+	insert into alertas_hist values (NULL,idAlerta,0,NEW.ID,NULL);
+	end if;
+	end$$
+	
+	
+delimiter $$
+create trigger insertaalertaproc after insert on Mon_Proc
+for each row
+begin
+	declare direccionIP varchar(20);
+	declare idAlerta int;
+	set direccionIP = NEW.agente;
+	set  idAlerta =	(select a.id_alerta from Alertas a
+inner join alerta_equipo ae
+on ae.id_alerta = a.id_alerta
+inner join Equipos e
+on e.id_equipo = ae.id_equipo
+where e.direccion_IP = direccionIP
+and a.activa =1);
+	if idAlerta > 0
+	then 
+	insert into alertas_hist values (NULL,idAlerta,0,NULL,NEW.ID);
+	end if;
+	end$$
