@@ -28,9 +28,9 @@ $mysql_config --libs
 funcion para insertar en la base de datos los valores que envia el agente
 */
 
-void AlmacenaProcesos(char *cadena,char *direccionIP){
+int AlmacenaProcesos(char *cadena,char *direccionIP){
 
-	//case 2 Almacena el inicio de ejecución de los procesos
+	//caso 2 Almacena el inicio de ejecución de los procesos
 	MYSQL *conn; /* variable de conexión para MySQL */
 	MYSQL_RES *res; /* variable que contendra el res	ultado de la consuta */
 	MYSQL_ROW row; /* variable que contendra los campos por cada registro consultado */
@@ -51,9 +51,10 @@ void AlmacenaProcesos(char *cadena,char *direccionIP){
 	if (!mysql_real_connect(conn, server, user, password, database, 0, NULL, 0))
 	{ /* definir los parámetros de la conexión antes establecidos */
 		fprintf(stderr, "%s\n", mysql_error(conn)); /* si hay un error definir cual fue dicho error */
-		exit(1);
+		//exit(1);
+		return 2;
 	}
-	printf("conexion realizada con exito \n");
+	//printf("conexion realizada con exito \n");
 	
 	//formato de entrada
 	//numero_opcion;nombre del usuario;nombre del proceso;fecha inicio del proceso;.
@@ -61,15 +62,15 @@ void AlmacenaProcesos(char *cadena,char *direccionIP){
 	ptr = strtok( la_prueba,";" );    // Primera llamada => Primer token
 	aux[0]= ptr;
 	corre++;
-  	printf( "%s\n", ptr );
+  	//printf( "%s\n", ptr );
    	while( (ptr = strtok( NULL,";" )) != NULL && corre<4){    // Posteriores llamadas
-     	printf( "%s\n", ptr );
+     	//printf( "%s\n", ptr );
 	aux[corre]=ptr;
-	printf("corre en pos %d dice %s \n",corre,aux[corre]);
+	//printf("corre en pos %d dice %s \n",corre,aux[corre]);
 	corre++;	
 	}
 	
-	printf("termina while\n");
+	//printf("termina while\n");
 /*
 ID int auto_increment primary key not null,
 agente varchar(15),
@@ -90,31 +91,32 @@ fin_proc varchar(100)
 	strcat(query,"',NULL");//fin del proceo en null	
 	strcat(query,")");
 	
-	printf("%s\n",query);
+	//printf("%s\n",query);
 	/* enviar consulta SQL */
 	if (mysql_query(conn,query))
 	{ /* definicion de la consulta y el origen de la conexion */
 		fprintf(stderr, "%s\n", mysql_error(conn));
-		//exit(1);
+		return 2;//exit(1);
 	}
 
-	if (mysql_query(conn,"select * from Mon_Proc"))
-	{ /* definicion de la consulta y el origen de la conexion */
-		fprintf(stderr, "%s\n", mysql_error(conn));
+	//if (mysql_query(conn,"select * from Mon_Proc"))
+	//{ /* definicion de la consulta y el origen de la conexion */
+	//	fprintf(stderr, "%s\n", mysql_error(conn));
 		//exit(1);
-	}
+	//}
 
-	res = mysql_use_result(conn);
-	printf("ID\tDireccionIP\t\tusuario\t\tnombre proceso\t\t fecha inicio\n");
-	while ((row = mysql_fetch_row(res)) != NULL) /* recorrer la variable res con todos los registros obtenidos para su uso */
-		printf("%s\t%s\t%s\t%s\t%s \n", row[0],row[1],row[2],row[3],row[4]); /* la variable row se convierte en un	 arreglo por el numero de campos que hay en la tabla */
+	//res = mysql_use_result(conn);
+	//printf("ID\tDireccionIP\t\tusuario\t\tnombre proceso\t\t fecha inicio\n");
+	//while ((row = mysql_fetch_row(res)) != NULL) /* recorrer la variable res con todos los registros obtenidos para su uso */
+	//	printf("%s\t%s\t%s\t%s\t%s \n", row[0],row[1],row[2],row[3],row[4]); /* la variable row se convierte en un	 arreglo por el numero de campos que hay en la tabla */
 
 	/* se libera la variable res y se cierra la conexión */
 	mysql_free_result(res);
 	mysql_close(conn);
+	return 0;
 }
 
-void AlmacenaRenombre(char *cadena,char *direccionIP){
+int AlmacenaRenombre(char *cadena,char *direccionIP){
 
 	//Caso 3 almacena renombre de archivos y carpetas
 
@@ -130,7 +132,7 @@ void AlmacenaRenombre(char *cadena,char *direccionIP){
 	conn = mysql_init(NULL); /*inicializacion a nula la conexión */
 	char query[200];	
 	char *ptr;
-	char *aux[8];
+	char *aux[6];
 	int corre =0;	
 
 	char *la_prueba;
@@ -140,9 +142,10 @@ void AlmacenaRenombre(char *cadena,char *direccionIP){
 	if (!mysql_real_connect(conn, server, user, password, database, 0, NULL, 0))
 	{ /* definir los parámetros de la conexión antes establecidos */
 		fprintf(stderr, "%s\n", mysql_error(conn)); /* si hay un error definir cual fue dicho error */
-		exit(1);
+	return 2;		
+	//exit(1);
 	}
-	printf("conexion realizada con exito \n");
+	//printf("conexion realizada con exito \n");
 
 	//formato de entrada	
 	//numero_opcion;nombre del usuario;ruta completa del archivo antes ;ruta completa del archivo despues;RENOMBRE;momento en el que registro el evento.
@@ -150,15 +153,15 @@ void AlmacenaRenombre(char *cadena,char *direccionIP){
 	ptr = strtok( la_prueba,";" );    // Primera llamada => Primer token
 	aux[0]= ptr;
 	corre++;
-  	printf( "%s\n", ptr );
+  	//printf( "%s\n", ptr );
    	while( (ptr = strtok( NULL,";" )) != NULL && corre<6){    // Posteriores llamadas
-     	printf( "%s\n", ptr );
+     	//printf( "%s\n", ptr );
 	aux[corre]=ptr;
-	printf("corre en pos %d dice %s \n",corre,aux[corre]);
+	//printf("corre en pos %d dice %s \n",corre,aux[corre]);
 	corre++;	
 	}
 	
-	printf("termina while\n");
+	//printf("termina while\n");
 /*
 create table Mon_files(
 ID int auto_increment primary key not null,
@@ -185,12 +188,13 @@ momento_de_cambio varchar(50)
 	strcat(query,aux[5]);//momento del cambio
 	strcat(query,"')");
 	
-	printf("%s\n",query);
+	//printf("%s\n",query);
 	/* enviar consulta SQL */
 	if (mysql_query(conn,query))
 	{ /* definicion de la consulta y el origen de la conexion */
 		fprintf(stderr, "%s\n", mysql_error(conn));
-		//exit(1);
+	return 2;		
+	//exit(1);
 	}
 
 	/*if (mysql_query(conn,"select * from Mon_Files"))
@@ -207,12 +211,13 @@ momento_de_cambio varchar(50)
 	/* se libera la variable res y se cierra la conexión */
 	mysql_free_result(res);
 	mysql_close(conn);
+return 0;
 }
 
-void AlmacenaCambio(char *cadena,char *direccionIP){
+int AlmacenaCambio(char *cadena,char *direccionIP){
 
 	//Caso 4 almacena cambio en archivos y carpetas
-	
+	 
 
 	MYSQL *conn; /* variable de conexión para MySQL */
 	MYSQL_RES *res; /* variable que contendra el res	ultado de la consuta */
@@ -224,41 +229,47 @@ void AlmacenaCambio(char *cadena,char *direccionIP){
 	conn = mysql_init(NULL); /*inicializacion a nula la conexión */
 	char query[200];	
 	char *ptr;
-	char *aux[5];
-	int corre =0;	
+	char *aux[4];
+	//char nombreuser[50],ruta[300],tipocambio[15],momentocambio[50];
+	int corre =0, tamdatos;	
 
 	char *la_prueba;
 	la_prueba = cadena;
-
+	tamdatos = sizeof(la_prueba);
 	/* conectar a la base de datos */
 	if (!mysql_real_connect(conn, server, user, password, database, 0, NULL, 0))
 	{ /* definir los parámetros de la conexión antes establecidos */
 		fprintf(stderr, "%s\n", mysql_error(conn)); /* si hay un error definir cual fue dicho error */
-		exit(1);
+		return 2;//exit(1);
 	}
-	printf("conexion realizada con exito \n");
-
+	//printf("conexion realizada con exito \n");
+	if(tamdatos<20){
+	return 3;
+	}
 	//formato de entrada	
 	//numero_opcion;nombre del usuario;ruta completa del archivo;tipo de cambio;momento en el que registro el evento.
 	
 	ptr = strtok( la_prueba,";" );    // Primera llamada => Primer token
 	aux[0]= ptr;
 	corre++;
-  	printf( "%s\n", ptr );
+  	//printf( "%s\n", ptr );
    	while( (ptr = strtok( NULL,";" )) != NULL &&corre<5){    // Posteriores llamadas
-     	printf( "%s\n", ptr );
+     	//printf( "%s\n", ptr );
 	aux[corre]=ptr;
-	printf("corre en pos %d dice %s \n",corre,aux[corre]);
+	//printf("corre en pos %d dice %s \n",corre,aux[corre]);
 	corre++;	
 	}
-	
-	printf("termina while\n");
+	//strcpy(nombreuser,aux[1]);
+	//strcpy(ruta,aux[2]);
+	//strcpy(tipocambio,aux[3]);
+	//strcpy(momentocambio,aux[4]);
+	//printf("termina while\n");
 /*
 create table Mon_files(
 ID int auto_increment primary key not null,
 agente varchar(15),
 user varchar(50),
-archivo varchar(200),
+archivo varchar(200), 
 archivo_despues varchar(200),
 tipo_cambio varchar(50),
 momento_de_cambio varchar(50)
@@ -268,7 +279,8 @@ momento_de_cambio varchar(50)
 	strcpy(query,"insert into Mon_files values (NULL,'");
 	strcat(query,direccionIP);//direccion IP
 	strcat(query,"','");
-	strcat(query,aux[1]);//nombre del usuario formato Dominio/usuario
+	strcat(query,aux[1]);	
+	//strcat(query,aux[1]);//nombre del usuario formato Dominio/usuario
 	strcat(query,"','");
 	strcat(query,aux[2]);//ruta completa del archivo antes 
 	strcat(query,"',NULL,'");
@@ -277,12 +289,12 @@ momento_de_cambio varchar(50)
 	strcat(query,aux[4]);//momento del cambio
 	strcat(query,"')");
 	
-	printf("%s\n",query);
+	// 	printf("%s\n",query);
 	/* enviar consulta SQL */
 	if (mysql_query(conn,query))
 	{ /* definicion de la consulta y el origen de la conexion */
 		fprintf(stderr, "%s\n", mysql_error(conn));
-		//exit(1);
+		return 2;//exit(1);
 	}
 
 	/*if (mysql_query(conn,"select * from Mon_Files"))
@@ -299,10 +311,11 @@ momento_de_cambio varchar(50)
 	/* se libera la variable res y se cierra la conexión */
 	mysql_free_result(res);
 	mysql_close(conn);
+	return 0;
 }
 
 
-void AlmacenaBorrado(char *cadena,char *direccionIP){
+int AlmacenaBorrado(char *cadena,char *direccionIP){
 
 	//Caso 5 almacena borrado de archivos y carpetas
 	
@@ -317,7 +330,7 @@ void AlmacenaBorrado(char *cadena,char *direccionIP){
 	conn = mysql_init(NULL); /*inicializacion a nula la conexión */
 	char query[200];	
 	char *ptr;
-	char *aux[7];
+	char *aux[4];
 	int corre =0;	
 
 	char *la_prueba;
@@ -327,9 +340,9 @@ void AlmacenaBorrado(char *cadena,char *direccionIP){
 	if (!mysql_real_connect(conn, server, user, password, database, 0, NULL, 0))
 	{ /* definir los parámetros de la conexión antes establecidos */
 		fprintf(stderr, "%s\n", mysql_error(conn)); /* si hay un error definir cual fue dicho error */
-		exit(1);
+		return 2;//exit(1);
 	}
-	printf("conexion realizada con exito \n");
+	//printf("conexion realizada con exito \n");
 
 	//formato de entrada	
 	//numero_opcion;nombre del usuario;ruta completa del archivo;tipo de cambio;momento en el que registro el evento.
@@ -337,15 +350,15 @@ void AlmacenaBorrado(char *cadena,char *direccionIP){
 	ptr = strtok( la_prueba,";" );    // Primera llamada => Primer token
 	aux[0]= ptr;
 	corre++;
-  	printf( "%s\n", ptr );
-   	while( (ptr = strtok( NULL,";" )) != NULL &&corre<5	){    // Posteriores llamadas
-     	printf( "%s\n", ptr );
+  	//printf( "%s\n", ptr );
+   	while( (ptr = strtok( NULL,";" )) != NULL &&corre<=4	){    // Posteriores llamadas
+     	//printf( "%s\n", ptr );
 	aux[corre]=ptr;
-	printf("corre en pos %d dice %s \n",corre,aux[corre]);
+	//printf("corre en pos %d dice %s \n",corre,aux[corre]);
 	corre++;	
 	}
 	
-	printf("termina while\n");
+	//printf("termina while\n");
 /*
 create table Mon_files(
 ID int auto_increment primary key not null,
@@ -370,12 +383,12 @@ momento_de_cambio varchar(50)
 	strcat(query,aux[4]);//momento del cambio
 	strcat(query,"')");
 	
-	printf("%s\n",query);
+	//printf("%s\n",query);
 	/* enviar consulta SQL */
 	if (mysql_query(conn,query))
 	{ /* definicion de la consulta y el origen de la conexion */
 		fprintf(stderr, "%s\n", mysql_error(conn));
-		//exit(1);
+		return 2;//exit(1);
 	}
 
 	/*if (mysql_query(conn,"select * from Mon_Files"))
@@ -392,9 +405,10 @@ momento_de_cambio varchar(50)
 	/* se libera la variable res y se cierra la conexión */
 	mysql_free_result(res);
 	mysql_close(conn);
+return 0;
 }
 
-void AlmacenaFinProcesos(char *cadena, char *direccionIP){
+int AlmacenaFinProcesos(char *cadena, char *direccionIP){
 
 	//Caso 6 almacena el fin de ejecucion de un proceso
 	
@@ -419,7 +433,7 @@ void AlmacenaFinProcesos(char *cadena, char *direccionIP){
 	if (!mysql_real_connect(conn, server, user, password, database, 0, NULL, 0))
 	{ /* definir los parámetros de la conexión antes establecidos */
 		fprintf(stderr, "%s\n", mysql_error(conn)); /* si hay un error definir cual fue dicho error */
-		exit(1);
+		return 2;//exit(1);
 	}
 	//printf("conexion realizada con exito \n");
 
@@ -430,7 +444,7 @@ void AlmacenaFinProcesos(char *cadena, char *direccionIP){
 	aux[0]= ptr;
 	corre++;
   	printf( "%s\n", ptr );
-   	while( (ptr = strtok( NULL,";" )) != NULL ){    // Posteriores llamadas
+   	while( (ptr = strtok( NULL,";" )) != NULL && corre<=5){    // Posteriores llamadas
      	printf( "%s\n", ptr );
 	aux[corre]=ptr;
 	printf("corre en pos %d dice %s \n",corre,aux[corre]);
@@ -464,7 +478,7 @@ fin_proc varchar(100)
 	if (mysql_query(conn,query))
 	{ /* definicion de la consulta y el origen de la conexion */
 		fprintf(stderr, "%s\n", mysql_error(conn));
-		//exit(1);
+		return 2;//exit(1);
 	}
 
 	/*if (mysql_query(conn,"select * from Mon_Files"))
@@ -481,6 +495,7 @@ fin_proc varchar(100)
 	/* se libera la variable res y se cierra la conexión */
 	mysql_free_result(res);
 	mysql_close(conn);
+	return 0;
 }
 
 void AlmacenaEquipoNuevo(char *direccionIP){
@@ -595,7 +610,7 @@ int ValidaEquipo(char *direccionIP, char *digesto,int puerto){
 	char dirIP[15];
 	char hash[40];	
 
-	printf("puerto %d \n",puerto);
+	//printf("puerto %d \n",puerto);
 	char nombre_archivo[100], profile[1048576];	
 
 	//nombre del archivo a enviar por el socket al agente
@@ -714,7 +729,7 @@ conectado varchar(2)
 	row= mysql_fetch_row(res);
 
 	if(atoi(row[0])<1){
-	printf("entra a 0\n");
+	//printf("entra a 0\n");
 	strcpy(profile,"No");
 	
 	enviado = sendto(sock,profile,2, 0, (struct sockaddr *)&servaddr,sizeof(servaddr));
@@ -761,7 +776,7 @@ conectado varchar(2)
 	//printf("bytes enviados %d \n",enviado);
 	//printf("%s \n",profile);	
 	fclose(perfil);
-	close(socket);	
+	close(sock);	
 	
 	}
 	
@@ -1127,7 +1142,7 @@ char *digesto(char *cadena){
 	aux[0]= ptr;
 	corre++;
   	printf( "%s\n", ptr );
-   	while( (ptr = strtok( NULL,";" )) != NULL ){    // Posteriores llamadas
+   	while( (ptr = strtok( NULL,";" )) != NULL&&corre<2 ){    // Posteriores llamadas
      	printf( "%s\n", ptr );
 	aux[corre]=ptr;
 	printf("corre en pos %d dice %s \n",corre,aux[corre]);

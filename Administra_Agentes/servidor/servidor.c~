@@ -24,26 +24,22 @@ int Conectar(char *direccionIP){
 }
 
 void *funcionAgente(void *parametros){
-
-	int a, puede_conectarse;
-
-	char buffer[200],*hash;
-	char dirIP[15];
 	struct param *paramet;
-	int opcion, resultado;
+	int a, puede_conectarse,datos,puerto,opcion,resultado;
+	paramet = (struct param *)parametros;
+	datos = paramet->data;
+	char buffer[datos],*hash;
+	char dirIP[15];
 
 	//int socket = socket(AF_INET,SOCK_DGRAM,0);;	
 		
 	//printf("parametros recibidos \n");
 
-	paramet = (struct param *)parametros;	
-	int puerto;
-
 	strcpy(buffer,paramet->mensaje);
 	strcpy(dirIP,paramet->direccionIP);
 	puerto = paramet->puerto;
 	
-	printf("Direccion IP %s buffer: %s puerto: %d \n",dirIP,paramet->mensaje,puerto);
+	printf("Direccion IP %s buffer: %s puerto: %d datos: %d\n",dirIP,buffer,puerto,datos);
 	opcion = bandera(paramet->mensaje);
 
 	switch(opcion){
@@ -51,22 +47,22 @@ void *funcionAgente(void *parametros){
 	//primera vez que se conecta, se valida la IP y el 
 	case 0:
 
-	printf("caso 0\n");
-	printf("buffer %s \n",buffer);
+	//printf("caso 0\n");
+	//printf("buffer %s \n",buffer);
 
 	hash=digesto(buffer);
 
-	printf("Direccion IP %s hash: %s \n",dirIP,hash);
+	//printf("Direccion IP %s hash: %s \n",dirIP,hash);
 
 	resultado = ValidaEquipo(dirIP,hash,puerto);
 
-	printf("resultado = %d \n",resultado);
+	//printf("resultado = %d \n",resultado);
 
 	break;
 	
 	case 1:
 
-	printf("caso 1\n");	
+	//printf("caso 1\n");	
 
 	puede_conectarse = Conectado(dirIP);//Conectar(direccionIP);	
 	
@@ -86,18 +82,26 @@ void *funcionAgente(void *parametros){
 	//recibe información de procesos.
 	case 2:
 	
-	printf("caso 2\n");
+	//printf("caso 2\n");
 
-	AlmacenaProcesos(buffer,dirIP);
+	resultado = AlmacenaProcesos(buffer,dirIP);
 	
+	if(resultado ==2){
+	fprintf(stderr,"Error en la base de datos");
+	}
+
 	break;
 
 	//recibe información de renombre de archivos
 	case 3:
 
-	printf("caso 3\n");
+	//printf("caso 3\n");
 
-	AlmacenaRenombre(buffer,dirIP);//caso 3
+	resultado = AlmacenaRenombre(buffer,dirIP);//caso 3
+	
+	if(resultado ==2){
+	fprintf(stderr,"Error en la base de datos");
+	}
 
 	break; 
 	
@@ -105,27 +109,38 @@ void *funcionAgente(void *parametros){
 	//recibe información de cambios en carpetas y archivos.
 	case 4:
 
-	printf("caso 4\n");
+	//printf("caso 4\n");
 
-	AlmacenaCambio(buffer,dirIP);//caso 4
+	resultado = AlmacenaCambio(buffer,dirIP);//caso 4
 
+	if(resultado ==2){
+	fprintf(stderr,"Error en la base de datos");
+	}
 
 	break; 
 
 	//recibe información de borrado de carpetas y archivos.
 	case 5:
-	printf("caso 5\n");
+	//printf("caso 5\n");
 
-	AlmacenaBorrado(buffer,dirIP);// caso 5
+	resultado = AlmacenaBorrado(buffer,dirIP);// caso 5
+
+	if(resultado ==2){
+	fprintf(stderr,"Error en la base de datos");
+	}
 
 	break;
 
 	//recibe información de termino de proceso no permitido.
 	case 6:
 
-	printf("caso 6\n"); //caso 6
+	//printf("caso 6\n"); //caso 6
 
-	AlmacenaFinProcesos(buffer,dirIP);
+	resultado = AlmacenaFinProcesos(buffer,dirIP);
+
+	if(resultado ==2){
+	fprintf(stderr,"Error en la base de datos");
+	}
 
 	break;
 
@@ -143,8 +158,10 @@ void *funcionAgente(void *parametros){
 	break;
 	    
 }
-pthread_exit((void *)a);
-
+//fprintf(stdout,"final hilo\n");
+return NULL;
+//pthread_exit((void *)a);
+//pthread_exit(NULL);
 }
 
 void ValidaEquipoConectado(char* direccionIP, char *digesto,int puerto){
@@ -164,7 +181,8 @@ printf("Validado exitosamente\n");
 }
 
 void *iniciaAlertador(void *ptr){
-
 system("java -jar \"/home/daniel/NetBeansProjects/Alertas/dist/Alertas.jar\"");
+printf("alertador iniciado\n");
+return NULL;
 }
 

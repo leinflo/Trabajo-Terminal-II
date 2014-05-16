@@ -4,13 +4,15 @@
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/socket.h>
-#include <netinet/in.h>
+// #include <netinet/in.h>
 #include <errno.h>
 #include "servidor.h"
 #include "baseDatos.h"
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <syslog.h>
+#include<pthread.h>
+#include<arpa/inet.h>
 
 
 int main(){
@@ -20,8 +22,11 @@ int main(){
 	pthread_t child[100];
 	pthread_t alerta;
 	int num_hilos = 0,alert;
+	char *dirIP;
+	pthread_attr_t attr[100];
+	int threa[100];
 	
-	alert = pthread_create(&alerta,NULL,iniciaAlertador,NULL);
+	//alert = pthread_create(&alerta,NULL,iniciaAlertador,NULL);
 	//void *iniciaAlertador(void *ptr)
 	//definicion de las estructuras del cliente y del servidor
 	struct sockaddr_in direccion,cliente;
@@ -34,7 +39,7 @@ int main(){
 	//longitud de la estructura cliente;
 	socklen_t clilen;
 	
-	char direccionIP[15],buffer[300],*hash;
+	char direccionIP[INET_ADDRSTRLEN],buffer[300],*hash;
 	
 	//creación de socket tcp para validar la conexión de los agentes y mantener una sesión con ellos. 	
 	_socket_ = socket(AF_INET,SOCK_DGRAM,0);
@@ -59,52 +64,55 @@ int main(){
 	exit(1);
 	}
     	//printf("asociando socket al puerto\n");
-
-
-	
-
-
 	//evitar que muera el servidor
 	while (1) 
 	{
-    	if(num_hilos<=0){
+    	if(num_hilos==100){
 	num_hilos=0;
 	}
 	else{
-	num_hilos--;	
-	}
+	//num_hilos--;	
+	//}
 	    //creación de un nuevo hilo
 
 	//printf("num_hilos %d \n",num_hilos);
-	
+	clilen = sizeof(cliente);
 	n = recvfrom(_socket_,(char *)buffer,300,0,(struct sockaddr *)&cliente,&clilen);
-	
+	//printf("mensaje n = %d\n",n);
 	if(n<0){
 	perror("error al recibir mensaje\n");
 	}
-	    printf("\n se conecto el agente %s con puerto %d\n", inet_ntoa(cliente.sin_addr), ntohs(cliente.sin_port));
+	inet_ntop(AF_INET,(struct sockaddr_in *)&cliente.sin_addr,direccionIP,sizeof(direccionIP));
+	   // printf("\n se conecto el agente %s con puerto %d\n",direccionIP, ntohs(cliente.sin_port));
 	//printf("tamaño %d buffer original %s  \n",n,buffer);
-	bzero(&parametros[num_hilos],sizeof(parametros[num_hilos]));
+	//bzero(&parametros[num_hilos],sizeof(parametros[num_hilos]));
 	//strcpy(buffer,"");
 		//memset(buffer,0,sizeof(buffer));
-	strcpy(parametros[num_hilos].direccionIP,inet_ntoa(cliente.sin_addr));
-//	printf("direcion IP a parametro %s \n",parametros[num_hilos].direccionIP);
+	//strcpy(parametros[num_hilos].direccionIP,inet_ntoa(cliente.sin_addr));
+	strcpy(parametros[num_hilos].direccionIP,direccionIP);
+	fprintf(stdout,"direcion IP a parametro %s \n",parametros[num_hilos].direccionIP);
+//	strcpy(parametros[num_hilos].mensaje,buffer);
 	strcpy(parametros[num_hilos].mensaje,buffer);
 //	printf("buffer a parametro %s \n",parametros[num_hilos].mensaje);
 	parametros[num_hilos].puerto = ntohs(cliente.sin_port);
+	parametros[num_hilos].data = n;	
+	//parametros[num_hilos].puerto = ntohs(cliente.sin_port);
 	//printf("puerto a parametros %d \n",parametros[num_hilos].puerto);
 		//recepción del primer mensaje
 	//n = recv(aceptacliente,(char *)buffer,sizeof(buffer),0);
 	//printf("Se recibio del agente %s\n",buffer);
-	//printf("manda a hilo \n");
-	pthread_create(&child[num_hilos], NULL, funcionAgente,&parametros[num_hilos]); //parametros casting 
-
-	pthread_join(&child[num_hilos], NULL);
-
+	//printf("manda a hilo %d \n",num_hilos);
+	pthread_attr_init(&attr[num_hilos]);
+	pthread_attr_setdetachstate(&attr[num_hilos],PTHREAD_CREATE_DETACHED);
+	threa[num_hilos]= pthread_create(&child[num_hilos], &attr[num_hilos], funcionAgente,&parametros[num_hilos]);	
+	//pthread_create(&child[num_hilos], NULL, funcionAgente,&parametros[num_hilos]); //parametros casting 
+	
+	//pthread_join(&child[num_hilos], NULL);
+	fprintf(stdout,"hilo %d\n",threa[num_hilos]);
 	num_hilos++;
 
 	//printf("salio del hilo");
-
+		}
 	}		
 }
 
