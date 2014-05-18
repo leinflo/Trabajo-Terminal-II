@@ -23,10 +23,13 @@ int main(){
 	pthread_t alerta;
 	int num_hilos = 0,alert;
 	char *dirIP;
-	pthread_attr_t attr[100];
+	pthread_attr_t attr[100],att;
 	int threa[100];
-	
-	//alert = pthread_create(&alerta,NULL,iniciaAlertador,NULL);
+		
+	pthread_attr_init(&att);
+	pthread_attr_setdetachstate(&att,PTHREAD_CREATE_DETACHED);
+	alert = pthread_create(&alerta,&att,iniciaAlertador,NULL);
+
 	//void *iniciaAlertador(void *ptr)
 	//definicion de las estructuras del cliente y del servidor
 	struct sockaddr_in direccion,cliente;
@@ -95,7 +98,7 @@ int main(){
 	strcpy(parametros[num_hilos].mensaje,buffer);
 //	printf("buffer a parametro %s \n",parametros[num_hilos].mensaje);
 	parametros[num_hilos].puerto = ntohs(cliente.sin_port);
-	parametros[num_hilos].datos = n;	
+	parametros[num_hilos].data = n;	
 	//parametros[num_hilos].puerto = ntohs(cliente.sin_port);
 	//printf("puerto a parametros %d \n",parametros[num_hilos].puerto);
 		//recepción del primer mensaje

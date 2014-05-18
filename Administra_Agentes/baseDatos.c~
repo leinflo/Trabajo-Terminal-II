@@ -46,7 +46,13 @@ int AlmacenaProcesos(char *cadena,char *direccionIP){
 
 	char *la_prueba;
 	la_prueba = cadena;
-
+	
+	int tamdatos;
+	tamdatos = sizeof(la_prueba);
+	//printf("conexion realizada con exito \n");
+	if(tamdatos<20){
+	return 3;
+	}
 	/* conectar a la base de datos */
 	if (!mysql_real_connect(conn, server, user, password, database, 0, NULL, 0))
 	{ /* definir los parámetros de la conexión antes establecidos */
@@ -342,8 +348,13 @@ int AlmacenaBorrado(char *cadena,char *direccionIP){
 		fprintf(stderr, "%s\n", mysql_error(conn)); /* si hay un error definir cual fue dicho error */
 		return 2;//exit(1);
 	}
+	//la_prueba = cadena;
+	int tamdatos;
+	tamdatos = sizeof(la_prueba);
 	//printf("conexion realizada con exito \n");
-
+	if(tamdatos<20){
+	return 3;
+	}
 	//formato de entrada	
 	//numero_opcion;nombre del usuario;ruta completa del archivo;tipo de cambio;momento en el que registro el evento.
 	
@@ -439,7 +450,12 @@ int AlmacenaFinProcesos(char *cadena, char *direccionIP){
 
 	//formato de entrada	
 	//numero_opcion;nombre del usuario;nombre del proceso;momento en el que inicio;momento en el que termino.
-	
+	int tamdatos;
+	tamdatos = sizeof(la_prueba);
+	//printf("conexion realizada con exito \n");
+	if(tamdatos<20){
+	return 3;
+	}
 	ptr = strtok( la_prueba,";" );    // Primera llamada => Primer token
 	aux[0]= ptr;
 	corre++;

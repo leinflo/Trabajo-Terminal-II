@@ -23,10 +23,13 @@ int main(){
 	pthread_t alerta;
 	int num_hilos = 0,alert;
 	char *dirIP;
-	pthread_attr_t attr[100];
+	pthread_attr_t attr[100],att;
 	int threa[100];
-	
-	//alert = pthread_create(&alerta,NULL,iniciaAlertador,NULL);
+		
+	pthread_attr_init(&att);
+	pthread_attr_setdetachstate(&att,PTHREAD_CREATE_DETACHED);
+	alert = pthread_create(&alerta,&att,iniciaAlertador,NULL);
+
 	//void *iniciaAlertador(void *ptr)
 	//definicion de las estructuras del cliente y del servidor
 	struct sockaddr_in direccion,cliente;

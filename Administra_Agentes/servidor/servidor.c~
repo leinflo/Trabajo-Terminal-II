@@ -44,7 +44,7 @@ void *funcionAgente(void *parametros){
 
 	switch(opcion){
 	
-	//primera vez que se conecta, se valida la IP y el 
+	//primera vez que se conecta, se valida  la IP y el 
 	case 0:
 
 	//printf("caso 0\n");

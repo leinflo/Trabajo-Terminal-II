@@ -182,7 +182,7 @@ printf("Validado exitosamente\n");
 
 void *iniciaAlertador(void *ptr){
 system("java -jar \"/home/daniel/NetBeansProjects/Alertas/dist/Alertas.jar\"");
-printf("alertador iniciado\n");
+	printf("alertador iniciado\n");
 return NULL;
 }
 
